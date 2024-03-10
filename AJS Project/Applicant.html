@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Applicant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 50px auto;
+            width: 500px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h2 {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            text-align: center;
+            margin-top: 0;
+            color: #333;
+        }
+
+        form {
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea,
+        input[type="date"] {
+            width: calc(100% - 10px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus,
+        input[type="date"]:focus {
+            border-color: #007bff;
+        }
+
+        input[type="button"] {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+    </style>
+    <script src="angular.js"></script>
+</head>
+
+<body ng-app="applicant" ng-controller="af">
+    <div class="container">
+        <h2>Applicant Form</h2>
+        <form name="applicantForm" novalidate>
+            <div class="form-group">
+                <label for="1">Enter the first name:</label>
+                <input type="text" placeholder="First Name" ng-model="m1" id="1" required>
+                <span class="error" ng-show="applicantForm.m1.$dirty && applicantForm.m1.$error.required">First Name is required</span>
+            </div>
+            <div class="form-group">
+                <label for="2">Enter the last name:</label>
+                <input type="text" placeholder="Last Name" ng-model="m2" id="2" required>
+                <span class="error" ng-show="applicantForm.m2.$dirty && applicantForm.m2.$error.required">Last Name is required</span>
+            </div>
+            <div class="form-group">
+                <label for="3">Specifications:</label>
+                <select name="Specifications" id="3" ng-model="m3" required>
+                    <option value="" disabled selected>Choose an option</option>
+                    <option value="Individual">Individual</option>
+                    <option value="Organizations">Organizations</option>
+                    <option value="Institute">Institute</option>
+                    <option value="Government">Government Entity</option>
+                </select>
+                <span class="error" ng-show="applicantForm.m3.$dirty && applicantForm.m3.$error.required">Specify the category</span>
+            </div>
+            <div class="form-group">
+                <label for="4">Address:</label>
+                <textarea name="add" id="4" cols="30" rows="4" ng-model="m4" required></textarea>
+                <span class="error" ng-show="applicantForm.m4.$dirty && applicantForm.m4.$error.required">Address is mandatory</span>
+            </div>
+            <div class="form-group">
+                <label for="5">Postal code:</label>
+                <input type="number" placeholder="ZIP Code" ng-model="m5" id="5" required>
+                <span class="error" ng-show="applicantForm.m5.$dirty && applicantForm.m5.$error.required">Enter the postal code</span>
+            </div>
+            <div class="form-group">
+                <label for="6">Phone:</label>
+                <input type="number" ng-model="m6" id="6" required>
+                <span class="error" ng-show="applicantForm.m6.$dirty && applicantForm.m6.$error.required">Phone number is required</span>
+            </div>
+            <div class="form-group">
+                <label for="7">Date:</label>
+                <input type="date" ng-model="m7" id="7" required>
+                <span class="error" ng-show="applicantForm.m7.$dirty && applicantForm.m7.$error.required">Specify the date</span>
+            </div>
+        </form>
+        <div style="text-align:right">
+            <input type="button" value="Add Applicant" class="1" ng-click="locate()" ng-disabled="applicantForm.$invalid">
+        </div>
+    </div>
+</body>
+
+<script>
+    const myvar = angular.module("applicant", [])
+        .controller("af", function ($scope, $window) {
+            let applicantId;
+            $scope.locate = function () {
+                if ($scope.m1 == "" || $scope.m1 == undefined) {
+                    alert("First Name is required")
+                    document.getElementById("1").focus()
+                } else if ($scope.m2 == "" || $scope.m2 == undefined) {
+                    alert("Last Name is required")
+                    document.getElementById("2").focus()
+                } else if ($scope.m3 == "" || $scope.m3 == undefined) {
+                    alert("Specify the category")
+                } else if ($scope.m4 == "" || $scope.m4 == undefined) {
+                    alert("Address is mandatory")
+                    document.getElementById("4").focus()
+                } else if ($scope.m5 == "" || $scope.m5 == undefined) {
+                    alert("Enter the postal code")
+                    document.getElementById("5").focus()
+                } else if ($scope.m6 == "" || $scope.m6 == undefined) {
+                    alert("Phone number is required")
+                    document.getElementById("6").focus()
+                } else if ($scope.m7 == "" || $scope.m7 == undefined) {
+                    alert("Specify the date")
+
+                } else {
+                    var applicantData = {
+                        firstName: $scope.m1,
+                        lastName: $scope.m2,
+                        category: $scope.m3,
+                        address: $scope.m4,
+                        postalCode: $scope.m5,
+                        phone: $scope.m6
+                    };
+
+                    fetch('http://localhost:3500/applicant',{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type':'application/json'
+                        },
+                        body:JSON.stringify(applicantData)
+                    }).then(res=>{
+                        return res.json();
+                    }).then(data =>{
+                        console.log(data)
+                        applicantId = data.data._id;
+                        localStorage.clear()
+                        localStorage.setItem("ApplicantId",applicantId)
+                        alert("You can close this window.")
+                        $window.close()
+                    })
+                    
+                }
+            }
+
+        })
+</script>
+
+</html>

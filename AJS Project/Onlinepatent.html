@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Government</title>
+    <script src="angular.js"></script>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2,
+        h3,
+        h4 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            height: 180px;
+            width: 200px;
+        }
+
+        .rules-container,
+        .form-container {
+            width: 70%;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .rule-heading,
+        .form-heading {
+            background-color: orange;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .rules-list {
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+
+        .form-description {
+            margin-top: 20px;
+        }
+
+        .form-description p {
+            margin-bottom: 10px;
+        }
+
+        .form-button {
+            display: block;
+            margin: 0 auto;
+            margin-top: 20px;
+            background-color: green;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .form-button:hover {
+            background-color: darkgreen;
+        }
+    </style>
+</head>
+
+<body ng-app="patent" ng-controller="pf">
+    <center>
+        <h2>Office of the Controller General of Patents, Designs <br> and Trademarks Department for promotion of industry
+            and internal trade. </h2>
+        <h3>Government of India</h3>
+        <img src="India.jpg" alt="">
+    </center>
+
+    <div class="rules-container">
+        <div class="rule-heading">
+            <h2>Rules and Regulations</h2>
+        </div>
+        <ol class="rules-list">
+            <li>Provide accurate and complete information.</li>
+            <li>Ensure clear and concise description of the invention.</li>
+            <li>Draft clear and specific claims.</li>
+            <li>Disclose relevant prior art.</li>
+            <li>List accurate inventors.</li>
+            <li>Ensure compliance with patent laws and regulations.</li>
+        </ol>
+        <label>
+            <input type="checkbox" ng-model="check"> I accept the entire Rules and Regulations to be complied while filling this form.
+        </label>
+    </div>
+
+    <div ng-show="check" class="form-container">
+        <div class="form-heading">
+            <h2>Applicant Form</h2>
+        </div>
+        <div class="form-description">
+            <h2>Introduction</h2>
+            <p>Welcome to the Applicant Patent Form! This form is designed to facilitate the submission of patent applications for innovative inventions. Before proceeding to fill out the form, please read through the following description to understand the purpose and requirements of the patent application process.</p>
+            <h2>Purpose of the form</h2>
+            <p>The Applicant Patent Form serves as the official document for submitting a patent application to the Office of the Controller General of Patents, Designs, and Trademarks. It allows inventors to protect their intellectual property rights by obtaining legal recognition and exclusive rights to their inventions.</p>
+            <h3>To fill out the applicant form click here: </h3>
+            <button class="form-button" ng-click="locateapp()">Click here</button>
+        </div>
+
+        <div class="form-heading">
+            <h2>Inventor Form</h2>
+        </div>
+        <div class="form-description">
+            <h2>Introduction</h2>
+            <p>Welcome to the Inventor Patent Form! This form is designed to facilitate the submission of patent applications for innovative inventions. Before proceeding to fill out the form, please read through the following description to understand the purpose and requirements of the patent application process for inventors.</p>
+            <h2>Purpose of the form</h2>
+            <p>The Inventor Patent Form serves as the official document for submitting a patent application to the Office of the Controller General of Patents, Designs, and Trademarks. It allows inventors to protect their intellectual property rights by obtaining legal recognition and exclusive rights to their inventions.</p>
+            <h3>To fill out the inventor form click here: </h3>
+            <button class="form-button" ng-click="locateinv()">Click here</button>
+        </div>
+
+        <h4>If you have completed filling the forms, save it to record your form</h4>
+        <button class="form-button" ng-click="saveForms()">Save</button>
+    </div>
+
+    <script>
+        const myvar = angular.module("patent", [])
+            .controller("pf", function($scope, $window) {
+                $scope.check = false;
+                $scope.applicantData = {};
+                $scope.inventorData = {};
+
+                $scope.locateapp = function() {
+                    $window.open("Applicant.html", "_blank");
+                }
+
+                $scope.locateinv = function() {
+                    $window.open("Inventor.html", "_blank");
+                }
+
+                $scope.saveForms = function() {
+                    console.log("Yaha ta thichyo")
+                    const { ApplicantId , InventorId } = localStorage;
+                    fetch('http://localhost:3500/form',{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type':'application/json'
+                        },
+                        body: JSON.stringify({applicantId: ApplicantId , inventorId: InventorId})
+                    }).then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        $window.open("display.html", "_blank");
+                        // localStorage.clear()
+                    })
+                }
+            });
+    </script>
+</body>
+
+</html>

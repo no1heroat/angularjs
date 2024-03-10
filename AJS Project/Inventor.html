@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Inventor</title>
+    <script src="./angular.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 500px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 4px 1px black;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            background-color: deepskyblue;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        form {
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input[type="button"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body ng-app="inventor" ng-controller="if">
+    <div class="container">
+        <h2>Inventor Form</h2>
+        <form action="">
+            Enter the name: <br>
+            <input type="text" ng-model="a1" placeholder="Full Name" id="1"><br>
+            Enter the email: <br>
+            <input type="email" ng-model="a2" id="2" placeholder="Email"><br>
+            Name of the invention: <br>
+            <input type="text" ng-model="a3" id="3"><br>
+            Category of invention: <br>
+            <select name="" id="7" ng-model="a7">
+                <option value="" disabled selected>Choose an option</option>
+                <option value="technical">Technical</option>
+                <option value="cultural">Cultural</option>
+                <option value="musical">Musical</option>
+                <option value="traditional">Traditional</option>
+                <option value="business">Business</option>
+                <option value="biological">Biological</option>
+            </select><br>
+            Phone: <br>
+            <input type="number" ng-model="a4" id="4"><br>
+            Address: <br>
+            <textarea name="" id="5" cols="30" rows="6" ng-model="a5"></textarea><br>
+            Postal code: <br>
+            <input type="number" id="6" ng-model="a6"><br>
+            <input type="button" value="Add Inventor" ng-click="locater()">
+        </form>
+    </div>
+
+    <script>
+        const myvar = angular.module("inventor", [])
+            .controller("if", function ($scope, $window) {
+                let inventorId;
+                $scope.locater = function () {
+                    if ($scope.a1 == "" || $scope.a1 == undefined) {
+                        alert("Full name is required.")
+                        document.getElementById("1").focus()
+                    } else if ($scope.a2 == "" || $scope.a2 == undefined) {
+                        alert("Email is required")
+                        document.getElementById("2").focus()
+                    } else if ($scope.a3 == "" || $scope.a3 == undefined) {
+                        alert("Mention invention name")
+                        document.getElementById("3").focus();
+                    } else if ($scope.a4 == "" || $scope.a4 == undefined) {
+                        alert("Phone is mandatory")
+                        document.getElementById("4").focus()
+                    } else if ($scope.a5 == "" || $scope.a5 == undefined) {
+                        alert("Address is mandatory.")
+                        document.getElementById("5").focus()
+                    } else if ($scope.a6 == "" || $scope.a6 == undefined) {
+                        alert("Enter the postal code")
+                        document.getElementById("6").focus()
+                    } else if ($scope.a7 == "" || $scope.a7 == undefined) {
+                        alert("Specify the category of the invention.")
+                    } else {
+                        const applicantId = localStorage.getItem('ApplicantId')
+                        var inventorData = {
+                            Name: $scope.a1,
+                            Email: $scope.a2,
+                            InventionName: $scope.a3,
+                            InventionCategory: $scope.a7,
+                            Phone: $scope.a4,
+                            Address: $scope.a5,
+                            PostalCode: $scope.a6,
+                            applicant: applicantId
+                        };
+                        fetch('http://localhost:3500/inventor',{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type':'application/json'
+                            },
+                            body:JSON.stringify(inventorData)
+                        }).then(res=>{
+                            return res.json();
+                        }).then(data =>{
+                            console.log(data)
+                            inventorId = data.data._id;
+                            localStorage.setItem('InventorId',inventorId)
+                            alert("You can close this window")
+                            $window.close()
+                        })  
+                    }
+                }
+            })
+    </script>
+</body>
+
+</html>

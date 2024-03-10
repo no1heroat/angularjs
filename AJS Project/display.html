@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Integrated</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 500px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .details {
+            margin-bottom: 20px;
+        }
+
+        .details p {
+            margin: 5px 0;
+        }
+
+        .details p:first-child {
+            margin-top: 0;
+        }
+
+        .details p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+    <div class="container">
+        <h2>Online Patent Application Form Details</h2>
+
+        <div class="details">
+            <h3>Applicant Details</h3>
+            <p>First Name: {{applicantData.firstName}}</p>
+            <p>Last Name: {{applicantData.lastName}}</p>
+            <p>Category: {{applicantData.category}}</p>
+            <p>Address: {{applicantData.address}}</p>
+            <p>Postal Code: {{applicantData.postalCode}}</p>
+            <p>Phone: {{applicantData.phone}}</p>
+        </div>
+
+        <div class="details">
+            <h3>Inventor Details</h3>
+            <p>Full Name: {{inventorData.Name}}</p>
+            <p>Email: {{inventorData.Email}}</p>
+            <p>Name of Invention: {{inventorData.InventionName}}</p>
+            <p>Category of Invention: {{inventorData.InventionCategory}}</p>
+            <p>Phone: {{inventorData.Phone}}</p>
+            <p>Address: {{inventorData.Address}}</p>
+            <p>Postal Code: {{inventorData.PostalCode}}</p>
+        </div>
+
+        <button ng-click="downloadForm()">Download Form</button>
+    </div>
+
+    <script>
+        const myApp = angular.module('myApp',[])
+        myApp.controller('myCtrl',($scope)=>{
+            $scope.formCount = 1;
+
+            $scope.downloadForm = function() {
+                const content = document.documentElement.outerHTML;
+                const blob = new Blob([content], { type: 'text/html' });
+                const anchor = document.createElement('a');
+                const filename =$scope.formCount + '.html';
+                anchor.href = URL.createObjectURL(blob);
+                anchor.download = filename;
+                $scope.formCount++;
+                anchor.click();
+            }
+            $scope.formCount++;
+
+            const applicantId = localStorage.getItem('ApplicantId')
+            const inventorId = localStorage.getItem("InventorId")
+
+            fetch(`http://localhost:3500/applicant/id/${applicantId}`)
+            .then(res => res.json())
+            .then(data => {
+                $scope.applicantData = data.data
+                $scope.$apply()
+            })
+
+            fetch(`http://localhost:3500/inventor/id/${inventorId}`)
+            .then(res => res.json())
+            .then(data => {
+                $scope.inventorData = data.data
+                $scope.$apply()
+            })  
+        })
+    </script>
+</body>
+</html>
